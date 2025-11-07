@@ -1,0 +1,463 @@
+{% extends 'base.html' %}
+{% block title %}Home · RideWise{% endblock %}
+{% block content %}
+  <h2 style="margin:6px 0 12px">🚲 Bike Demand Prediction</h2>
+  <div class="tabs card">
+    <div class="tab-headers">
+      <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+      <button class="tab-btn" data-tab="hourly">Hourly Prediction</button>
+      <button class="tab-btn" data-tab="daily">Daily Prediction</button>
+      <button class="tab-btn" data-tab="chatbot">Chatbot</button>
+    </div>
+    <div class="tab-content">
+      <section id="tab-dashboard" class="tab-pane active">
+        <div class="card">
+          <h2>🚲 Welcome to RideWise</h2>
+          <p style="font-size: 15px; line-height: 1.6; margin-bottom: 16px;">
+            <strong>RideWise</strong> is an intelligent bike-sharing demand prediction platform that uses machine learning 
+            to forecast bike rental demand. Whether you're managing a bike-sharing service or planning your daily commute, 
+            RideWise helps you make data-driven decisions by predicting hourly and daily bike demand based on weather 
+            conditions, time of day, and day type.
+          </p>
+          
+          <div class="divider"></div>
+          
+          <h4 style="margin: 12px 0 8px;">What RideWise Does:</h4>
+          <ul style="line-height: 1.8; margin-bottom: 16px; padding-left: 20px;">
+            <li><strong>Hourly Predictions:</strong> Forecast bike demand for any specific hour of the day</li>
+            <li><strong>Daily Predictions:</strong> Estimate total daily bike rentals with hourly breakdown</li>
+            <li><strong>Weather Integration:</strong> Considers temperature, humidity, windspeed, and weather conditions</li>
+            <li><strong>Smart Analysis:</strong> Factors in weekends, holidays, and working days</li>
+          </ul>
+          
+          <h4 style="margin: 12px 0 8px;">Use Cases:</h4>
+          <ul style="line-height: 1.8; margin-bottom: 16px; padding-left: 20px;">
+            <li><strong>Bike-Sharing Operators:</strong> Optimize bike distribution and inventory management</li>
+            <li><strong>City Planners:</strong> Understand demand patterns for better infrastructure planning</li>
+            <li><strong>Commuters:</strong> Plan ahead by knowing when bikes will be available</li>
+            <li><strong>Operations Teams:</strong> Schedule maintenance and rebalancing activities</li>
+          </ul>
+        </div>
+        
+        <div class="kpis" style="margin-top: 16px;">
+          <div class="kpi"><div class="kpi-label">Total Predictions</div><div class="kpi-value" id="totalPreds">{{ history|length }}</div></div>
+          <div class="kpi"><div class="kpi-label">Last Prediction</div><div class="kpi-value" id="lastPred">{% if history %}{{ history[-1].prediction }}{% else %}—{% endif %}</div></div>
+          <div class="kpi"><div class="kpi-label">Models Available</div><div class="kpi-value">2</div></div>
+        </div>
+        
+        {% if history|length > 0 %}
+        <div class="card" style="margin-top: 16px;">
+          <h4>Your Prediction History</h4>
+          <div class="row">
+            <div style="flex: 1;">
+              <canvas id="historyChart" height="200"></canvas>
+            </div>
+            <div style="flex: 1;">
+              <canvas id="typeChart" height="200"></canvas>
+            </div>
+          </div>
+          <div style="margin-top: 12px;">
+            <canvas id="trendChart" height="180"></canvas>
+          </div>
+        </div>
+        {% else %}
+        <div class="card" style="margin-top: 16px; text-align: center; padding: 24px;">
+          <p class="muted">No predictions yet. Start by making a prediction in the Hourly or Daily tabs!</p>
+        </div>
+        {% endif %}
+      </section>
+
+      <section id="tab-hourly" class="tab-pane">
+        <h3>⏰ Hourly</h3>
+        <div class="card form">
+          <div class="section">
+            <h4>Date and time</h4>
+            <div class="row">
+              <div class="field">
+                <label>Target date</label>
+                <input id="h_date" type="date" />
+              </div>
+              <div class="field">
+                <label>Hour (0–23)</label>
+                <input id="h_hour" type="number" min="0" max="23" value="17" />
+              </div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="section">
+            <h4>Weather</h4>
+            <div class="row">
+              <div class="field">
+                <label>Temperature (°C)</label>
+                <input id="h_temp" type="number" step="0.1" value="20" />
+                <div class="hint">Use average for that hour if unsure</div>
+              </div>
+              <div class="field">
+                <label>Humidity (%)</label>
+                <input id="h_hum" type="number" min="0" max="100" value="60" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label>Windspeed (km/h)</label>
+                <input id="h_wind" type="number" step="0.1" value="12" />
+              </div>
+              <div class="field">
+                <label>Weather condition</label>
+                <select id="h_weather">
+                  {% for opt in weather_options %}
+                  <option value="{{ opt }}">{{ opt }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="section">
+            <h4>Day settings</h4>
+            <div class="row">
+              <div class="field">
+                <label>Day type</label>
+                <select id="h_daytype">
+                  <option>Weekday</option>
+                  <option>Weekend</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>&nbsp;</label>
+                <div class="inline">
+                  <span class="pill"><input id="h_holiday" type="checkbox" /> Holiday</span>
+                  <span class="pill"><input id="h_work" type="checkbox" checked /> Working day</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button id="h_btn" class="btn">Predict Hourly</button>
+          <div id="h_res" class="result big"></div>
+          <div class="muted small">Model: {{ hour_model_path }}</div>
+          <div class="charts">
+            <canvas id="h_line" height="220"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-daily" class="tab-pane">
+        <h3>📅 Daily</h3>
+        <p class="muted small">Daily total plus hourly breakdown for the selected day.</p>
+        <div class="card form">
+          <div class="section">
+            <h4>Date</h4>
+            <div class="row">
+              <div class="field">
+                <label>Target date</label>
+                <input id="d_date" type="date" />
+              </div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="section">
+            <h4>Weather (daily averages)</h4>
+            <div class="row">
+              <div class="field">
+                <label>Avg Temp (°C)</label>
+                <input id="d_temp" type="number" step="0.1" value="18" />
+              </div>
+              <div class="field">
+                <label>Avg Humidity (%)</label>
+                <input id="d_hum" type="number" min="0" max="100" value="65" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label>Avg Windspeed (km/h)</label>
+                <input id="d_wind" type="number" step="0.1" value="14" />
+              </div>
+              <div class="field">
+                <label>Weather</label>
+                <select id="d_weather">
+                  {% for opt in weather_options %}
+                  <option value="{{ opt }}" {% if loop.index0 == 1 %}selected{% endif %}>{{ opt }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="section">
+            <h4>Day settings</h4>
+            <div class="row">
+              <div class="field">
+                <label>Day type</label>
+                <select id="d_daytype">
+                  <option>Weekday</option>
+                  <option>Weekend</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>&nbsp;</label>
+                <div class="inline">
+                  <span class="pill"><input id="d_holiday" type="checkbox" /> Holiday</span>
+                  <span class="pill"><input id="d_work" type="checkbox" checked /> Working day</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button id="d_btn" class="btn">Predict Daily</button>
+          <div id="d_res" class="result big"></div>
+          <div class="muted small">Model: {{ day_model_path }}</div>
+          <div class="charts">
+            <canvas id="d_bar" height="220"></canvas>
+            <canvas id="d_area" height="220" style="margin-top:8px"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-chatbot" class="tab-pane">
+        <h2>Chatbot</h2>
+        <p class="muted">Ask questions like: "How many bikes will be rented tomorrow at 5pm?" or "What is the expected bike demand on 25 Nov 2025?"</p>
+        <div class="chat">
+          <div class="chat-window" id="chatWin"></div>
+          <div class="chat-input">
+            <input id="chatMsg" placeholder="Ask a prediction question..." />
+            <button id="chatSend" class="btn">Send</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+{% endblock %}
+{% block scripts %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    if (window.Chart && Chart.defaults) {
+      Chart.defaults.font.size = 14;
+      Chart.defaults.color = '#e8eefc';
+    }
+    const headers = document.querySelectorAll('.tab-btn');
+    headers.forEach(btn => btn.addEventListener('click', () => {
+      headers.forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    }));
+
+    function isoDateOrToday(input) {
+      if (input && input.value) return input.value;
+      const d = new Date();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${d.getFullYear()}-${m}-${day}`;
+    }
+
+    let hLineChart, dBarChart, dAreaChart;
+
+    function destroyIf(chart) { if (chart) { chart.destroy(); } }
+
+    // Update dashboard after prediction
+    function updateDashboard() {
+      fetch('/api/history')
+        .then(r => r.json())
+        .then(data => {
+          if (data.history && data.history.length > 0) {
+            const totalEl = document.getElementById('totalPreds');
+            const lastEl = document.getElementById('lastPred');
+            if (totalEl) totalEl.textContent = data.history.length;
+            if (lastEl && data.history.length > 0) lastEl.textContent = data.history[data.history.length - 1].prediction;
+          }
+        })
+        .catch(() => {});
+    }
+
+    document.getElementById('h_btn').addEventListener('click', async () => {
+      const payload = {
+        target_date: isoDateOrToday(document.getElementById('h_date')),
+        target_hour: document.getElementById('h_hour').value || 17,
+        temperature_c: document.getElementById('h_temp').value || 20,
+        humidity_pct: document.getElementById('h_hum').value || 60,
+        windspeed_kph: document.getElementById('h_wind').value || 12,
+        weather_condition: document.getElementById('h_weather').value,
+        day_type: document.getElementById('h_daytype').value,
+        is_holiday: document.getElementById('h_holiday').checked,
+        is_working_day: document.getElementById('h_work').checked,
+      };
+      const btn = document.getElementById('h_btn');
+      btn.disabled = true; btn.textContent = 'Predicting...';
+      try {
+        const res = await fetch('/api/predict_hourly', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || 'Request failed');
+        document.getElementById('h_res').textContent = `Predicted bikes: ${json.rounded}`;
+        document.getElementById('lastPred').textContent = json.rounded;
+        setTimeout(updateDashboard, 500);
+
+        // 24-hour profile line chart
+        if (Array.isArray(json.by_hour_24)) {
+          const lEl = document.getElementById('h_line');
+          destroyIf(hLineChart);
+          const labels = Array.from({length: 24}, (_, i) => `${String(i).padStart(2,'0')}:00`);
+          hLineChart = new Chart(lEl.getContext('2d'), {
+            type: 'line',
+            data: { labels, datasets: [{ label: 'Hourly Profile', data: json.by_hour_24, borderColor: '#2c7be5', backgroundColor: 'rgba(44,123,229,0.25)', fill: true, tension: 0.35, pointRadius: 2 }] },
+            options: { plugins: { legend: { display: false } }, scales: { x: { grid: { display:false } }, y: { beginAtZero: true } } }
+          });
+        }
+      } catch (e) {
+        document.getElementById('h_res').textContent = `Error: ${e.message}`;
+      } finally {
+        btn.disabled = false; btn.textContent = 'Predict Hourly';
+      }
+    });
+
+    document.getElementById('d_btn').addEventListener('click', async () => {
+      const payload = {
+        target_date: isoDateOrToday(document.getElementById('d_date')),
+        temperature_c: document.getElementById('d_temp').value || 18,
+        humidity_pct: document.getElementById('d_hum').value || 65,
+        windspeed_kph: document.getElementById('d_wind').value || 14,
+        weather_condition: document.getElementById('d_weather').value,
+        day_type: document.getElementById('d_daytype').value,
+        is_holiday: document.getElementById('d_holiday').checked,
+        is_working_day: document.getElementById('d_work').checked,
+      };
+      const btn = document.getElementById('d_btn');
+      btn.disabled = true; btn.textContent = 'Predicting...';
+      try {
+        const res = await fetch('/api/predict_daily', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || 'Request failed');
+        document.getElementById('d_res').textContent = `Total: ${json.rounded_total}, Avg hourly: ${Math.round(json.average)}`;
+        document.getElementById('lastPred').textContent = json.rounded_total;
+        setTimeout(updateDashboard, 500);
+
+        // Bar chart for hourly breakdown
+        if (Array.isArray(json.by_hour)) {
+          const labels = Array.from({length: 24}, (_, i) => `${String(i).padStart(2,'0')}:00`);
+          const bEl = document.getElementById('d_bar');
+          destroyIf(dBarChart);
+          dBarChart = new Chart(bEl.getContext('2d'), {
+            type: 'bar',
+            data: { labels, datasets: [{ label: 'Hourly Demand', data: json.by_hour, backgroundColor: 'rgba(44,123,229,0.6)' }] },
+            options: { plugins: { legend: { display: false } }, scales: { x: { grid: { display:false } }, y: { beginAtZero: true } } }
+          });
+
+          // Area chart (cumulative)
+          const cum = json.by_hour.reduce((acc, v, i) => { acc.push((acc[i-1]||0)+v); return acc; }, []);
+          const aEl = document.getElementById('d_area');
+          destroyIf(dAreaChart);
+          dAreaChart = new Chart(aEl.getContext('2d'), {
+            type: 'line',
+            data: { labels, datasets: [{ label: 'Cumulative', data: cum, borderColor: '#2c7be5', backgroundColor: 'rgba(44,123,229,0.25)', fill: true, tension: 0.35, pointRadius: 0 }] },
+            options: { plugins: { legend: { display: false } }, scales: { x: { grid: { display:false } }, y: { beginAtZero: true } } }
+          });
+        }
+      } catch (e) {
+        document.getElementById('d_res').textContent = `Error: ${e.message}`;
+      } finally {
+        btn.disabled = false; btn.textContent = 'Predict Daily';
+      }
+    });
+
+    async function sendChat() {
+      const win = document.getElementById('chatWin');
+      const inp = document.getElementById('chatMsg');
+      const msg = inp.value.trim();
+      if (!msg) return;
+      win.innerHTML += `<div class="msg me">${msg}</div>`;
+      inp.value = '';
+      try {
+        const res = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: msg }) });
+        const text = await res.text();
+        let payload = null;
+        try { payload = JSON.parse(text); } catch (_) { payload = { reply: text }; }
+        if (!res.ok) {
+          const errMsg = (payload && (payload.error || payload.reply)) || 'Request failed';
+          throw new Error(errMsg);
+        }
+        win.innerHTML += `<div class=\"msg bot\">${(payload && payload.reply) || 'Sorry, no answer.'}</div>`;
+      } catch (e) {
+        win.innerHTML += `<div class=\"msg bot\">Error: ${e.message}</div>`;
+      }
+      win.scrollTop = win.scrollHeight;
+    }
+    document.getElementById('chatSend').addEventListener('click', sendChat);
+    document.getElementById('chatMsg').addEventListener('keydown', (e) => { if (e.key === 'Enter') sendChat(); });
+
+    // History visualizations
+    {% if history|length > 0 %}
+    const historyData = {{ history|tojson }};
+    
+    // Chart 1: Prediction values over time
+    const histCtx = document.getElementById('historyChart');
+    if (histCtx) {
+      const labels = historyData.map((p, i) => i + 1);
+      const values = historyData.map(p => p.prediction);
+      new Chart(histCtx.getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Prediction Value',
+            data: values,
+            borderColor: '#2c7be5',
+            backgroundColor: 'rgba(44,123,229,0.25)',
+            fill: true,
+            tension: 0.35,
+            pointRadius: 3
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: { x: { grid: { display: false } }, y: { beginAtZero: true } }
+        }
+      });
+    }
+
+    // Chart 2: Type distribution (hourly vs daily)
+    const typeCtx = document.getElementById('typeChart');
+    if (typeCtx) {
+      const hourly = historyData.filter(p => p.type === 'hourly').length;
+      const daily = historyData.filter(p => p.type === 'daily').length;
+      new Chart(typeCtx.getContext('2d'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Hourly', 'Daily'],
+          datasets: [{
+            data: [hourly, daily],
+            backgroundColor: ['#2c7be5', '#6366f1']
+          }]
+        },
+        options: {
+          plugins: { legend: { position: 'bottom' } }
+        }
+      });
+    }
+
+    // Chart 3: Trend over time (bar chart)
+    const trendCtx = document.getElementById('trendChart');
+    if (trendCtx) {
+      const labels = historyData.map((p, i) => `#${i + 1}`);
+      const values = historyData.map(p => p.prediction);
+      new Chart(trendCtx.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Predictions',
+            data: values,
+            backgroundColor: 'rgba(44,123,229,0.6)'
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false } },
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+    {% endif %}
+  </script>
+{% endblock %}
+
+

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}RideWise{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  {% block head %}{% endblock %}
+  <style>
+    .flash { padding: 10px 12px; border-radius: 8px; margin-bottom: 12px; }
+    .flash.error { background: rgba(255, 77, 79, 0.1); border: 1px solid rgba(255, 77, 79, 0.35); color: #ffd1d1; }
+    .flash.success { background: rgba(82, 196, 26, 0.08); border: 1px solid rgba(82, 196, 26, 0.35); color: #d7f7c8; }
+  </style>
+</head>
+<body {% if background_url %}style="--bg-url: url('{{ background_url }}')"{% endif %}>
+  <header class="topbar">
+    <div class="container row-between">
+      <div class="logo">🚲 RideWise</div>
+      <nav class="nav">
+        {% if session.get('user') %}
+          <span class="user">{{ session.get('user').username or session.get('user').email }}</span>
+          <a href="{{ url_for('home') }}">Home</a>
+          <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+          <a href="{{ url_for('signin') }}">Sign in</a>
+          <a href="{{ url_for('signup') }}" class="primary">Sign up</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>
+
+
