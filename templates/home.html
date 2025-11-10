@@ -20,6 +20,17 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+        
+        .bike-emoji {
+            font-size: 3rem;
+            margin-right: 20px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
         .home-hero .subtitle {
             font-size: 20px;
             color: var(--text-muted);

@@ -138,13 +138,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="temperature">🌡️ Temperature (normalized)</label>
-                    <input type="number" step="0.01" id="temperature" name="temp" placeholder="0.0 - 1.0" required>
+                    <label for="temperature">🌡️ Temperature (°C)</label>
+                    <input type="number" step="0.1" id="temperature" name="temp" placeholder="-10 to 40" min="-15" max="45" required>
+                    <small style="color: #9aa0b4; font-size: 12px; margin-top: 4px; display: block;">Enter temperature in Celsius (e.g., 25.5)</small>
                 </div>
 
                 <div class="form-group">
-                    <label for="humidity">💧 Humidity (normalized)</label>
-                    <input type="number" step="0.01" id="humidity" name="hum" placeholder="0.0 - 1.0" required>
+                    <label for="humidity">💧 Humidity (%)</label>
+                    <input type="number" step="1" id="humidity" name="hum" placeholder="0 to 100" min="0" max="100" required>
+                    <small style="color: #9aa0b4; font-size: 12px; margin-top: 4px; display: block;">Enter humidity percentage (e.g., 65)</small>
                 </div>
 
                 <div class="form-group">
@@ -166,8 +168,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="windspeed">💨 Windspeed (normalized)</label>
-                    <input type="number" step="0.01" id="windspeed" name="windspeed" placeholder="0.0 - 1.0" required>
+                    <label for="windspeed">💨 Wind Speed (km/h)</label>
+                    <input type="number" step="0.1" id="windspeed" name="windspeed" placeholder="0 to 60" min="0" max="80" required>
+                    <small style="color: #9aa0b4; font-size: 12px; margin-top: 4px; display: block;">Enter wind speed in km/h (e.g., 15.5)</small>
                 </div>
 
                 <div class="form-group">
@@ -206,6 +209,136 @@
                 </button>
             </div>
         </form>
+        
+        <!-- Help section with value ranges -->
+        <div style="background: rgba(102, 126, 234, 0.05); padding: 20px; border-radius: 12px; margin-top: 24px; font-size: 14px;">
+            <h3 style="margin: 0 0 12px 0; color: #667eea;">📋 Input Value Guidelines</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                <div>
+                    <strong>🌡️ Temperature:</strong><br>
+                    Summer: 25-35°C<br>
+                    Winter: -5-15°C<br>
+                    Spring/Fall: 10-25°C
+                </div>
+                <div>
+                    <strong>💧 Humidity:</strong><br>
+                    Low: 20-40%<br>
+                    Moderate: 40-70%<br>
+                    High: 70-95%
+                </div>
+                <div>
+                    <strong>💨 Wind Speed:</strong><br>
+                    Calm: 0-10 km/h<br>
+                    Moderate: 10-25 km/h<br>
+                    Strong: 25+ km/h
+                </div>
+                <div>
+                    <strong>🌤️ Weather:</strong><br>
+                    1: Clear/Sunny<br>
+                    2: Cloudy/Mist<br>
+                    3: Light Rain/Snow<br>
+                    4: Heavy Rain/Snow
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        // Real-time input validation and feedback
+        document.addEventListener('DOMContentLoaded', function() {
+            const tempInput = document.getElementById('temperature');
+            const humInput = document.getElementById('humidity');
+            const windInput = document.getElementById('windspeed');
+            
+            // Add input event listeners for real-time feedback
+            tempInput.addEventListener('input', function() {
+                validateTemperature(this.value);
+            });
+            
+            humInput.addEventListener('input', function() {
+                validateHumidity(this.value);
+            });
+            
+            windInput.addEventListener('input', function() {
+                validateWindSpeed(this.value);
+            });
+            
+            function validateTemperature(value) {
+                const temp = parseFloat(value);
+                const small = tempInput.nextElementSibling;
+                
+                if (isNaN(temp)) return;
+                
+                if (temp < -10) {
+                    small.style.color = '#ff6b6b';
+                    small.textContent = '🥶 Very cold! Are you sure? (Below -10°C)';
+                } else if (temp > 40) {
+                    small.style.color = '#ff6b6b';
+                    small.textContent = '🔥 Very hot! Are you sure? (Above 40°C)';
+                } else if (temp >= -5 && temp <= 35) {
+                    small.style.color = '#51cf66';
+                    small.textContent = '✅ Good temperature range for biking!';
+                } else {
+                    small.style.color = '#9aa0b4';
+                    small.textContent = 'Enter temperature in Celsius (e.g., 25.5)';
+                }
+            }
+            
+            function validateHumidity(value) {
+                const hum = parseFloat(value);
+                const small = humInput.nextElementSibling;
+                
+                if (isNaN(hum)) return;
+                
+                if (hum < 0 || hum > 100) {
+                    small.style.color = '#ff6b6b';
+                    small.textContent = '⚠️ Humidity must be between 0-100%';
+                } else if (hum >= 40 && hum <= 70) {
+                    small.style.color = '#51cf66';
+                    small.textContent = '✅ Ideal humidity for bike rentals!';
+                } else if (hum > 80) {
+                    small.style.color = '#ffd43b';
+                    small.textContent = '💧 High humidity - may reduce rentals';
+                } else {
+                    small.style.color = '#9aa0b4';
+                    small.textContent = 'Enter humidity percentage (e.g., 65)';
+                }
+            }
+            
+            function validateWindSpeed(value) {
+                const wind = parseFloat(value);
+                const small = windInput.nextElementSibling;
+                
+                if (isNaN(wind)) return;
+                
+                if (wind < 0) {
+                    small.style.color = '#ff6b6b';
+                    small.textContent = '⚠️ Wind speed cannot be negative';
+                } else if (wind > 50) {
+                    small.style.color = '#ff6b6b';
+                    small.textContent = '🌪️ Very windy! This will significantly reduce rentals';
+                } else if (wind <= 15) {
+                    small.style.color = '#51cf66';
+                    small.textContent = '✅ Great wind conditions for biking!';
+                } else if (wind <= 30) {
+                    small.style.color = '#ffd43b';
+                    small.textContent = '💨 Moderate wind - slight impact on rentals';
+                } else {
+                    small.style.color = '#9aa0b4';
+                    small.textContent = 'Enter wind speed in km/h (e.g., 15.5)';
+                }
+            }
+            
+            // Set some reasonable default values
+            if (!tempInput.value) tempInput.value = '22';
+            if (!humInput.value) humInput.value = '55';
+            if (!windInput.value) windInput.value = '12';
+            
+            // Trigger initial validation
+            validateTemperature(tempInput.value);
+            validateHumidity(humInput.value);
+            validateWindSpeed(windInput.value);
+        });
+    </script>
 </body>
 </html>

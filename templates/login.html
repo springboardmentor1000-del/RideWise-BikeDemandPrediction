@@ -2,82 +2,211 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login - Bike Rental Prediction</title>
+    <title>RideWise - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            background: linear-gradient(135deg, #232526 0%, #414345 100%);
-            min-height: 100vh;
+        * {
             margin: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .login-container {
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Animated background bikes */
+        .bike-bg {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(255,255,255,0.10);
-            border-radius: 16px;
-            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.37);
-            padding: 40px 32px 32px 32px;
-            width: 350px;
+            font-size: 3rem;
+            color: rgba(255,255,255,0.1);
+            animation: float 6s ease-in-out infinite;
+            z-index: 1;
+        }
+        
+        .bike-bg:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .bike-bg:nth-child(2) { top: 20%; right: 15%; animation-delay: 2s; }
+        .bike-bg:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 4s; }
+        .bike-bg:nth-child(4) { bottom: 10%; right: 10%; animation-delay: 1s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        .login-container {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 2rem;
+            width: 400px;
             text-align: center;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 10;
+            border: 1px solid rgba(255,255,255,0.2);
         }
-        .login-container h2 {
-            color: #fff;
-            margin-bottom: 24px;
-            letter-spacing: 1px;
+        
+        .app-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            gap: 10px;
         }
-        .login-container input[type="text"],
-        .login-container input[type="password"] {
-            width: 90%;
-            padding: 12px;
-            margin: 10px 0 20px 0;
-            border: none;
-            border-radius: 8px;
-            background: rgba(255,255,255,0.2);
-            color: #fff;
-            font-size: 16px;
+        
+        .app-logo .bike-icon {
+            font-size: 2.5rem;
+            color: #667eea;
+            animation: spin 2s linear infinite;
         }
-        .login-container input[type="text"]:focus,
-        .login-container input[type="password"]:focus {
-            outline: none;
-            background: rgba(255,255,255,0.3);
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-        .login-container button {
+        
+        .app-title {
+            color: #333;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .login-subtitle {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+        
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-group input {
             width: 100%;
-            padding: 12px;
-            background: #4e54c8;
+            padding: 15px 20px 15px 50px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+        }
+        
+        .input-group .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 1.2rem;
+        }
+        
+        .login-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
             color: #fff;
             border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            margin-top: 1rem;
         }
-        .login-container button:hover {
-            background: #232526;
+        
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
         }
-        .login-container .error {
-            color: #ffb3b3;
-            margin-bottom: 10px;
+        
+        .login-button:active {
+            transform: translateY(0);
         }
-        .login-container .tab {
-            margin-top: 18px;
-            color: #fff;
-            font-size: 15px;
+        
+        .error {
+            background: rgba(255, 87, 87, 0.1);
+            color: #ff5757;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ff5757;
+            font-size: 14px;
         }
-        .login-container .tab a {
-            color: #4e54c8;
-            text-decoration: underline;
-            margin-left: 6px;
+        
+        .security-note {
+            margin-top: 2rem;
+            color: #666;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .demo-credentials {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .demo-credentials h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .demo-credentials p {
+            color: #666;
+            font-size: 12px;
+            margin: 2px 0;
         }
     </style>
 </head>
 <body>
+    <!-- Floating bike icons in background -->
+    <div class="bike-bg">🚴</div>
+    <div class="bike-bg">🚲</div>
+    <div class="bike-bg">🚴‍♀️</div>
+    <div class="bike-bg">🚴‍♂️</div>
+    
     <div class="login-container">
-        <h2>Login</h2>
+        <!-- App Logo and Title -->
+        <div class="app-logo">
+            <div class="bike-icon">🚲</div>
+            <h1 class="app-title">RideWise</h1>
+        </div>
+        <p class="login-subtitle">AI-Powered Bike Rental Prediction System</p>
+        
+
+        
+        <!-- Error Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
             {% for category, message in messages %}
@@ -85,13 +214,27 @@
             {% endfor %}
           {% endif %}
         {% endwith %}
+        
+        <!-- Login Form -->
         <form method="post">
-            <input type="text" name="username" placeholder="Username" required autofocus>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit">Login</button>
+            <div class="input-group">
+                <span class="input-icon">�</span>
+                <input type="email" name="username" placeholder="Enter email address" required autofocus>
+            </div>
+            
+            <div class="input-group">
+                <span class="input-icon">🔒</span>
+                <input type="password" name="password" placeholder="Enter password" required>
+            </div>
+            
+            <button type="submit" class="login-button">
+                🚀 Access Dashboard
+            </button>
         </form>
-        <div class="tab" style="margin-top: 16px; color: var(--text-muted); font-size: 13px;">
-            <span>🔒 Secure Login Portal</span>
+        
+        <div class="security-note">
+            <span>🛡️</span>
+            <span>Secure AI-Powered Analytics Platform</span>
         </div>
     </div>
 </body>

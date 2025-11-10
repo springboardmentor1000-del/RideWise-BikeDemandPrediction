@@ -130,14 +130,17 @@
     
     <div class="container chat-container">
         <div class="chat-header">
-            <h1>💬 AI Assistant</h1>
-            <p class="muted">Ask me anything about predictions, features, or datasets</p>
+            <h1>🧠 Smart Analytics AI Assistant</h1>
+            <p class="muted">Trained on your complete bike rental dataset! Ask me anything - I know all the patterns, correlations, and insights.</p>
             <div class="powered-by">
                 <span class="gemini-badge">
-                    <span class="sparkle">✨</span>
-                    <strong>Powered by Google Gemini AI</strong>
+                    <span class="sparkle">🔬</span>
+                    <strong>Advanced Data Analytics Engine</strong>
                 </span>
             </div>
+            <p style="color: #667eea; font-size: 13px; margin-top: 12px;">
+                📊 Statistical Analysis • 🎯 Predictive Insights • 🔗 Correlation Detection • 📈 Pattern Recognition
+            </p>
         </div>
         
         <div class="chat-box">
@@ -147,10 +150,14 @@
                 <button onclick="send()">Send</button>
             </div>
             <div class="quick-suggestions">
-                <span class="suggestion-btn" onclick="sendSuggestion('What are the top features?')">Top Features</span>
-                <span class="suggestion-btn" onclick="sendSuggestion('How to predict?')">How to Predict</span>
-                <span class="suggestion-btn" onclick="sendSuggestion('Tell me about datasets')">Datasets Info</span>
-                <span class="suggestion-btn" onclick="sendSuggestion('What is the weather impact?')">Weather Impact</span>
+                <span class="suggestion-btn" onclick="sendSuggestion('What are the total bike rentals in the dataset?')">📊 Total Rentals</span>
+                <span class="suggestion-btn" onclick="sendSuggestion('When is the peak hour for bike rentals?')">⏰ Peak Hours</span>
+                <span class="suggestion-btn" onclick="sendSuggestion('Which weather condition is best for rentals?')">🌤️ Best Weather</span>
+                <span class="suggestion-btn" onclick="sendSuggestion('What is the average humidity percentage for bike rentals?')">💧 Humidity Analysis</span>
+                <span class="suggestion-btn" onclick="sendSuggestion('What is the difference between weekday and weekend rentals?')">� Weekday vs Weekend</span>
+                <span class="suggestion-btn" onclick="sendSuggestion('Show me temperature and wind speed correlations')">🌡️ Weather Correlations</span>
+                <span class="suggestion-btn" onclick="sendSuggestion('What are the optimal conditions for maximum rentals?')">� Optimal Conditions</span>
+                <span class="suggestion-btn" onclick="sendSuggestion('Tell me comprehensive insights about bike rental patterns')">� Full Insights</span>
             </div>
         </div>
     </div>
@@ -190,7 +197,7 @@
         
         // Welcome message
         window.onload = () => {
-            add('bot', 'Hi! I\'m your AI assistant. Ask me about predictions, model features, or datasets!');
+            add('bot', '🚴‍♂️ Hi! I\'m your bike rental assistant! Ask me about:\n• Temperature effects on rentals 🌡️\n• Peak rental times and days ⏰\n• Weather impact analysis 🌤️\n• Seasonal trends and patterns 🍂\n• Dataset statistics and insights 📊\n\nTry the suggestions below or ask anything naturally!');
         };
     </script>
 </body>
