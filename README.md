@@ -295,4 +295,4 @@ curl -X POST http://127.0.0.1:5000/predict_hour \
 **API**: Flask REST API  
 **Data Source**: Capital Bikeshare historical data
 
-
+Author: Krutika Borase krutikaborse3@gmail.com
