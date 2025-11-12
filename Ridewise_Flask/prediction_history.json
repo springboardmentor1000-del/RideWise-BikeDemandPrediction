@@ -1,0 +1,188 @@
+{
+  "predictions": [
+    {
+      "type": "hourly",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-04",
+      "hour": 17,
+      "prediction": 68,
+      "timestamp": "2025-11-04T10:52:54.165928"
+    },
+    {
+      "type": "hourly",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-05",
+      "hour": 11,
+      "prediction": 86,
+      "timestamp": "2025-11-04T10:53:12.921978"
+    },
+    {
+      "type": "daily",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-07",
+      "prediction": 1191,
+      "timestamp": "2025-11-04T10:53:42.154640"
+    },
+    {
+      "type": "hourly",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-04",
+      "hour": 18,
+      "prediction": 79,
+      "timestamp": "2025-11-04T11:03:31.250171"
+    },
+    {
+      "type": "daily",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-05",
+      "prediction": 1252,
+      "timestamp": "2025-11-04T11:03:46.265397"
+    },
+    {
+      "type": "hourly",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-07",
+      "hour": 18,
+      "prediction": 82,
+      "timestamp": "2025-11-07T09:20:14.199396"
+    },
+    {
+      "type": "daily",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-21",
+      "prediction": 1283,
+      "timestamp": "2025-11-07T09:21:21.260563"
+    },
+    {
+      "type": "hourly",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-10",
+      "hour": 19,
+      "prediction": 72,
+      "timestamp": "2025-11-10T13:18:55.784990"
+    },
+    {
+      "type": "hourly",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-10",
+      "hour": 20,
+      "prediction": 77,
+      "timestamp": "2025-11-10T13:19:19.678044"
+    },
+    {
+      "type": "hourly",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-10",
+      "hour": 20,
+      "prediction": 77,
+      "timestamp": "2025-11-10T13:19:39.789914"
+    },
+    {
+      "type": "hourly",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-10",
+      "hour": 20,
+      "prediction": 77,
+      "timestamp": "2025-11-10T13:19:41.152747"
+    },
+    {
+      "type": "hourly",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-10",
+      "hour": 19,
+      "prediction": 72,
+      "timestamp": "2025-11-10T13:19:47.888795"
+    },
+    {
+      "type": "daily",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-14",
+      "prediction": 1245,
+      "timestamp": "2025-11-10T13:20:27.154469"
+    },
+    {
+      "type": "hourly",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-10",
+      "hour": 17,
+      "prediction": 75,
+      "timestamp": "2025-11-10T13:24:39.405263"
+    },
+    {
+      "type": "daily",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-10",
+      "prediction": 1264,
+      "timestamp": "2025-11-10T19:34:56.423712"
+    },
+    {
+      "type": "hourly",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-11",
+      "hour": 18,
+      "prediction": 77,
+      "timestamp": "2025-11-10T19:35:04.898072"
+    },
+    {
+      "type": "hourly",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-11",
+      "hour": 18,
+      "prediction": 77,
+      "timestamp": "2025-11-10T19:35:12.134225"
+    },
+    {
+      "type": "hourly",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-11",
+      "hour": 17,
+      "prediction": 136,
+      "timestamp": "2025-11-10T19:35:41.588214"
+    },
+    {
+      "type": "hourly",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-12",
+      "hour": 17,
+      "prediction": 71,
+      "timestamp": "2025-11-12T17:51:45.197492"
+    },
+    {
+      "type": "hourly",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-13",
+      "hour": 17,
+      "prediction": 70,
+      "timestamp": "2025-11-12T17:52:09.271520"
+    },
+    {
+      "type": "daily",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-21",
+      "prediction": 1264,
+      "timestamp": "2025-11-12T17:53:52.352269"
+    },
+    {
+      "type": "daily",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-12",
+      "prediction": 1263,
+      "timestamp": "2025-11-12T17:55:46.175344"
+    },
+    {
+      "type": "hourly",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-14",
+      "hour": 17,
+      "prediction": 83,
+      "timestamp": "2025-11-12T18:09:55.860779"
+    },
+    {
+      "type": "daily",
+      "user_email": "swethamoorthy0308@gmail.com",
+      "date": "2025-11-13",
+      "prediction": 1249,
+      "timestamp": "2025-11-12T18:10:10.410626"
+    }
+  ]
+}

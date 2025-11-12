@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RideWise – Flask UI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --primary: #2c7be5; --bg: #0b1220; --card: #121a2b; --text: #e8eefc; --muted: #a7b4d6; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: linear-gradient(180deg, #0d1526, #0b1220 60%); color: var(--text); }
+    header { padding: 24px; text-align: center; }
+    header h1 { margin: 0; font-size: 28px; }
+    header p { margin: 6px 0 0; color: var(--muted); }
+    .container { max-width: 1100px; margin: 0 auto; padding: 16px 24px 40px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
+    .card { background: rgba(13, 20, 38, 0.72); border: 1px solid rgba(80, 106, 172, 0.25); border-radius: 12px; padding: 16px; backdrop-filter: blur(10px); }
+    h2 { font-size: 18px; margin: 0 0 12px; }
+    label { display: block; font-size: 13px; color: var(--muted); margin: 10px 0 6px; }
+    input, select { width: 100%; padding: 10px 12px; background: #0e1628; color: var(--text); border: 1px solid rgba(80, 106, 172, 0.35); border-radius: 8px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    button { margin-top: 12px; width: 100%; padding: 10px 14px; border-radius: 8px; border: none; background: var(--primary); color: white; font-weight: 600; cursor: pointer; }
+    button:disabled { opacity: 0.6; cursor: default; }
+    .result { margin-top: 10px; font-size: 14px; }
+    .muted { color: var(--muted); font-size: 12px; }
+    .hr { height: 1px; background: rgba(80, 106, 172, 0.25); margin: 12px 0; }
+    .small { font-size: 12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🚲 RideWise – Flask UI</h1>
+    <p>Predict bike-sharing demand with a lightweight Flask front-end.</p>
+  </header>
+  <div class="container">
+    <div class="grid">
+      <div class="card">
+        <h2>⏰ Hourly Prediction</h2>
+        <div class="row">
+          <div>
+            <label for="h_date">Target date</label>
+            <input id="h_date" type="date" />
+          </div>
+          <div>
+            <label for="h_hour">Hour (0–23)</label>
+            <input id="h_hour" type="number" min="0" max="23" value="17" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="h_temp">Temperature (°C)</label>
+            <input id="h_temp" type="number" step="0.1" value="20" />
+          </div>
+          <div>
+            <label for="h_hum">Humidity (%)</label>
+            <input id="h_hum" type="number" min="0" max="100" value="60" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="h_wind">Windspeed (km/h)</label>
+            <input id="h_wind" type="number" step="0.1" value="12" />
+          </div>
+          <div>
+            <label for="h_weather">Weather</label>
+            <select id="h_weather">
+              {% for opt in weather_options %}
+              <option value="{{ opt }}">{{ opt }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="h_daytype">Day type</label>
+            <select id="h_daytype">
+              <option>Weekday</option>
+              <option>Weekend</option>
+            </select>
+          </div>
+          <div>
+            <label>&nbsp;</label>
+            <div class="row">
+              <label class="small"><input id="h_holiday" type="checkbox" /> Holiday</label>
+              <label class="small"><input id="h_work" type="checkbox" checked /> Working day</label>
+            </div>
+          </div>
+        </div>
+        <div class="hr"></div>
+        <button id="h_btn">Predict Hourly</button>
+        <div id="h_res" class="result muted"></div>
+        <div class="muted small">Model: {{ hour_model_path }}</div>
+      </div>
+
+      <div class="card">
+        <h2>📅 Daily Prediction</h2>
+        <div class="row">
+          <div>
+            <label for="d_date">Target date</label>
+            <input id="d_date" type="date" />
+          </div>
+          <div>
+            <label for="d_temp">Avg Temp (°C)</label>
+            <input id="d_temp" type="number" step="0.1" value="18" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="d_hum">Avg Humidity (%)</label>
+            <input id="d_hum" type="number" min="0" max="100" value="65" />
+          </div>
+          <div>
+            <label for="d_wind">Avg Windspeed (km/h)</label>
+            <input id="d_wind" type="number" step="0.1" value="14" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="d_weather">Weather</label>
+            <select id="d_weather">
+              {% for opt in weather_options %}
+              <option value="{{ opt }}" {% if loop.index0 == 1 %}selected{% endif %}>{{ opt }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label for="d_daytype">Day type</label>
+            <select id="d_daytype">
+              <option>Weekday</option>
+              <option>Weekend</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>&nbsp;</label>
+            <label class="small"><input id="d_holiday" type="checkbox" /> Holiday</label>
+          </div>
+          <div>
+            <label>&nbsp;</label>
+            <label class="small"><input id="d_work" type="checkbox" checked /> Working day</label>
+          </div>
+        </div>
+        <div class="hr"></div>
+        <button id="d_btn">Predict Daily</button>
+        <div id="d_res" class="result muted"></div>
+        <div class="muted small">Model: {{ day_model_path }}</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function isoDateOrToday(input) {
+      if (input && input.value) return input.value;
+      const d = new Date();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${d.getFullYear()}-${m}-${day}`;
+    }
+
+    document.getElementById('h_btn').addEventListener('click', async () => {
+      const payload = {
+        target_date: isoDateOrToday(document.getElementById('h_date')),
+        target_hour: document.getElementById('h_hour').value || 17,
+        temperature_c: document.getElementById('h_temp').value || 20,
+        humidity_pct: document.getElementById('h_hum').value || 60,
+        windspeed_kph: document.getElementById('h_wind').value || 12,
+        weather_condition: document.getElementById('h_weather').value,
+        day_type: document.getElementById('h_daytype').value,
+        is_holiday: document.getElementById('h_holiday').checked,
+        is_working_day: document.getElementById('h_work').checked,
+      };
+      const btn = document.getElementById('h_btn');
+      btn.disabled = true; btn.textContent = 'Predicting...';
+      try {
+        const res = await fetch('/api/predict_hourly', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || 'Request failed');
+        document.getElementById('h_res').textContent = `Predicted bikes: ${json.rounded} (exact: ${json.prediction.toFixed(1)})`;
+      } catch (e) {
+        document.getElementById('h_res').textContent = `Error: ${e.message}`;
+      } finally {
+        btn.disabled = false; btn.textContent = 'Predict Hourly';
+      }
+    });
+
+    document.getElementById('d_btn').addEventListener('click', async () => {
+      const payload = {
+        target_date: isoDateOrToday(document.getElementById('d_date')),
+        temperature_c: document.getElementById('d_temp').value || 18,
+        humidity_pct: document.getElementById('d_hum').value || 65,
+        windspeed_kph: document.getElementById('d_wind').value || 14,
+        weather_condition: document.getElementById('d_weather').value,
+        day_type: document.getElementById('d_daytype').value,
+        is_holiday: document.getElementById('d_holiday').checked,
+        is_working_day: document.getElementById('d_work').checked,
+      };
+      const btn = document.getElementById('d_btn');
+      btn.disabled = true; btn.textContent = 'Predicting...';
+      try {
+        const res = await fetch('/api/predict_daily', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || 'Request failed');
+        document.getElementById('d_res').textContent = `Total: ${json.rounded_total}, Avg hourly: ${json.average.toFixed(1)}`;
+      } catch (e) {
+        document.getElementById('d_res').textContent = `Error: ${e.message}`;
+      } finally {
+        btn.disabled = false; btn.textContent = 'Predict Daily';
+      }
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
