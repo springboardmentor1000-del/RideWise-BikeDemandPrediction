@@ -1,0 +1,9 @@
+-r requirements.txt
+# Dev / local extras
+jupyter
+notebook
+ipykernel
+pandas
+numpy
+matplotlib
+scikit-learn
