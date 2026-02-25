@@ -1,0 +1,12 @@
+Loading the datasets: The day.csv and hour.csv datasets were loaded into pandas DataFrames (day_df and hour_df). The dteday column in both dataframes was converted to datetime objects to facilitate time-series analysis.
+Finding the number of rows and columns: The .shape attribute was used to display the dimensions of both DataFrames, providing an initial understanding of the dataset sizes.
+Identifying null and duplicate values: The .isnull().sum() method was used to check for missing values in each column, and the .duplicated().sum() method was used to identify any duplicate rows.
+Calculating descriptive statistics: The .describe() method was applied to the numerical columns of both DataFrames to calculate key descriptive statistics such as mean, median, standard deviation, minimum, maximum, and quartiles.
+Conducting univariate analysis: Histograms were generated for key numerical variables (cnt, temp, hum) in the day_df to visualize their distributions and identify patterns or skewness.
+Conducting bivariate analysis: Scatter plots were created to explore the relationships between pairs of numerical variables (temp vs cnt, hum vs cnt) in the day_df to identify potential correlations.
+Conducting multivariate analysis (correlation heatmap): A correlation heatmap was generated for the numerical columns of day_df (excluding identifiers and date) to visualize the correlation matrix and understand the strength and direction of linear relationships between multiple variables simultaneously.
+Identifying and handling outliers: The Interquartile Range (IQR) method was applied to numerical columns (excluding identifiers and target variables) in both DataFrames to identify and cap outliers, mitigating their potential impact on subsequent analysis and modeling.
+Generating further data visualizations: Additional plots were generated to further explore the data:
+A line plot showing the temporal trend of daily bike rentals over time (dteday vs cnt in day_df).
+A scatter plot illustrating the relationship between normalized temperature and total rentals for daily data (temp vs cnt in day_df).
+A scatter plot illustrating the relationship between normalized temperature and total rentals for hourly data (temp vs cnt in hour_df).
